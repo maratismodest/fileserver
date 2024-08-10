@@ -41,4 +41,4 @@ lerna-debug.log*
 uploads/*
 
 # disable https
-src/main.ts
+#src/main.ts
