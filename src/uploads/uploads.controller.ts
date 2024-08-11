@@ -33,6 +33,11 @@ export class UploadsController {
     return this.uploadsService.getAudio(filename, res);
   }
 
+  @Get('chamala/:filename')
+  getChamalaFile(@Param('filename') filename, @Res() res) {
+    return this.uploadsService.getChamalaFile(filename, res);
+  }
+
   @Delete(':filename')
   removeFile(@Param() { filename }: UploadDto) {
     return this.uploadsService.deleteFile(filename);

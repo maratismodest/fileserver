@@ -11,6 +11,10 @@ export class UploadsService {
     return res.sendFile(filename, { root: './uploads/audio' });
   }
 
+  getChamalaFile(filename: string, @Res() res) {
+    return res.sendFile(filename, { root: './uploads/chamala' });
+  }
+
   deleteFile(filename: string) {
     fs.unlinkSync(`./uploads/${filename}`);
     return { status: 'deleted' };
