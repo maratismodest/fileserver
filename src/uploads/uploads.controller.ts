@@ -23,31 +23,29 @@ import { getExtension, validators } from './uploads.utils';
 export class UploadsController {
   constructor(private uploadsService: UploadsService) {}
 
-  @Get(':filename')
-  getFile(@Param('filename') filename, @Res() res) {
-    return this.uploadsService.getFile(filename, res);
+  @Get(':project/:filename')
+  getFile(
+    @Param('project') project: string,
+    @Param('filename') filename: string,
+    @Res() res,
+  ) {
+    // return `Fetching file ${filename} from project ${project}`;
+    return this.uploadsService.getFileByProject(project, filename, res);
   }
 
-  @Get('audio/:filename')
-  getAudio(@Param('filename') filename, @Res() res) {
-    return this.uploadsService.getAudio(filename, res);
+  @Delete(':project/:filename')
+  removeFile(@Param() { project, filename }: UploadDto) {
+    return this.uploadsService.deleteFile(project, filename);
   }
 
-  @Get('chamala/:filename')
-  getChamalaFile(@Param('filename') filename, @Res() res) {
-    return this.uploadsService.getChamalaFile(filename, res);
-  }
-
-  @Delete(':filename')
-  removeFile(@Param() { filename }: UploadDto) {
-    return this.uploadsService.deleteFile(filename);
-  }
-
-  @Post()
+  @Post(':project')
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: './uploads',
+        destination: (req, file, callback) => {
+          const project = req.params.project;
+          callback(null, `./uploads/${project}`);
+        },
         filename: (req, file, callback) => {
           console.log('file', file);
           callback(null, `${Date.now()}.${getExtension(file.mimetype)}`);
@@ -56,6 +54,7 @@ export class UploadsController {
     }),
   )
   handleUpload(
+    @Param('project') project: string,
     @UploadedFile(
       new ParseFilePipe({
         validators: validators,
@@ -65,7 +64,7 @@ export class UploadsController {
   ) {
     return {
       status: 'uploaded',
-      link: `${process.env.SERVER_DOMAIN_URL}/uploads/${file.filename}`,
+      link: `${process.env.SERVER_DOMAIN_URL}/uploads/${project}/${file.filename}`,
     };
   }
 }
