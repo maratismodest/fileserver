@@ -6,18 +6,34 @@ import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.i
 import * as fs from 'fs';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-const httpsOptions: HttpsOptions = {
-  key: fs.readFileSync(
-    '/etc/letsencrypt/live/fileserver.innoads.ru/privkey.pem',
-  ),
-  cert: fs.readFileSync(
-    '/etc/letsencrypt/live/fileserver.innoads.ru/fullchain.pem',
-  ),
-  ca: fs.readFileSync('/etc/letsencrypt/live/fileserver.innoads.ru/chain.pem'),
-};
+// const httpsOptions: HttpsOptions = {
+//   key: fs.readFileSync(
+//     '/etc/letsencrypt/live/fileserver.innoads.ru/privkey.pem',
+//   ),
+//   cert: fs.readFileSync(
+//     '/etc/letsencrypt/live/fileserver.innoads.ru/fullchain.pem',
+//   ),
+//   ca: fs.readFileSync('/etc/letsencrypt/live/fileserver.innoads.ru/chain.pem'),
+// };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
+    httpsOptions:
+      process.env.NODE_ENV === 'production'
+        ? ({
+            key: fs.readFileSync(
+              '/etc/letsencrypt/live/fileserver.innoads.ru/privkey.pem',
+            ),
+            cert: fs.readFileSync(
+              '/etc/letsencrypt/live/fileserver.innoads.ru/fullchain.pem',
+            ),
+            ca: fs.readFileSync(
+              '/etc/letsencrypt/live/fileserver.innoads.ru/chain.pem',
+            ),
+          } as HttpsOptions)
+        : undefined,
+  });
   // const app = await NestFactory.create(AppModule, { cors: true });
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()

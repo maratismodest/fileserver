@@ -28,6 +28,11 @@ export class UploadsController {
     return this.uploadsService.getFile(filename, res);
   }
 
+  @Get('audio/:filename')
+  getAudio(@Param('filename') filename, @Res() res) {
+    return this.uploadsService.getAudio(filename, res);
+  }
+
   @Delete(':filename')
   removeFile(@Param() { filename }: UploadDto) {
     return this.uploadsService.deleteFile(filename);
