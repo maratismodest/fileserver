@@ -4,19 +4,14 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { UploadsModule } from './uploads/uploads.module';
 import { MulterModule } from '@nestjs/platform-express';
-import { JwtModule } from '@nestjs/jwt';
-import * as process from 'node:process';
+import { JwtModuleRegister } from './utils/jwtModuleRegister';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MulterModule.register({ dest: './uploads' }),
     UploadsModule,
-    JwtModule.register({
-      global: true,
-      secret: process.env.JWT_PRIVATE_KEY,
-      signOptions: { expiresIn: '365d' },
-    }),
+    JwtModuleRegister,
   ],
   controllers: [AppController],
   providers: [AppService],
