@@ -6,19 +6,19 @@ import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.i
 import * as fs from 'fs';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-// const httpsOptions: HttpsOptions = {
-//   key: fs.readFileSync(
-//     '/etc/letsencrypt/live/fileserver.innoads.ru/privkey.pem',
-//   ),
-//   cert: fs.readFileSync(
-//     '/etc/letsencrypt/live/fileserver.innoads.ru/fullchain.pem',
-//   ),
-//   ca: fs.readFileSync('/etc/letsencrypt/live/fileserver.innoads.ru/chain.pem'),
-// };
+const httpsOptions: HttpsOptions = {
+  key: fs.readFileSync(
+    '/etc/letsencrypt/live/fileserver.innoads.ru/privkey.pem',
+  ),
+  cert: fs.readFileSync(
+    '/etc/letsencrypt/live/fileserver.innoads.ru/fullchain.pem',
+  ),
+  ca: fs.readFileSync('/etc/letsencrypt/live/fileserver.innoads.ru/chain.pem'),
+};
 
 async function bootstrap() {
-  // const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
+  // const app = await NestFactory.create(AppModule, { cors: true });
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
     .setTitle(process.env.APP_NAME)
@@ -27,7 +27,7 @@ async function bootstrap() {
       `${process.env.SERVER_DOMAIN_URL}/swagger.json`,
       '/api/docs-json',
     )
-    .setVersion('1.0.3')
+    .setVersion('1.0.4')
     // .addTag('InnoAds')
     .build();
   const document = SwaggerModule.createDocument(app, config);
