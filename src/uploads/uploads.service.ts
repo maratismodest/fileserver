@@ -9,6 +9,6 @@ export class UploadsService {
 
   deleteFile(project: string, filename: string) {
     fs.unlinkSync(`./uploads/${project}/${filename}`);
-    return { status: 'deleted' };
+    return { message: 'deleted', status: 200 };
   }
 }

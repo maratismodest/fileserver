@@ -25,6 +25,7 @@ export class JwtAuthGuard implements CanActivate {
       if (bearer !== 'Bearer' || !token) {
         throw new UnauthorizedException({
           message: 'User is unauthorized: no Bearer Token',
+          status: 401,
         });
       }
 
@@ -35,7 +36,7 @@ export class JwtAuthGuard implements CanActivate {
     } catch (e) {
       throw new UnauthorizedException({
         message: 'User is unauthorized:',
-        description: e.message,
+        status: 401,
       });
     }
   }
