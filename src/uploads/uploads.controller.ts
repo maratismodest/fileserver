@@ -7,6 +7,7 @@ import {
   Post,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -17,6 +18,7 @@ import * as process from 'process';
 import { UploadDto } from './dto/upload.dto';
 import { UploadsService } from './uploads.service';
 import { getExtension, validators } from './uploads.utils';
+import { JwtAuthGuard } from '../utils/jwt-auth.guard';
 
 @ApiTags('Uploads')
 @Controller('uploads')
@@ -33,6 +35,7 @@ export class UploadsController {
     return this.uploadsService.getFileByProject(project, filename, res);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':project/:filename')
   removeFile(@Param() { project, filename }: UploadDto) {
     return this.uploadsService.deleteFile(project, filename);
