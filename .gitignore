@@ -33,12 +33,3 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-# env
-.env
-
-# upload
-uploads/*
-
-# disable https
-#src/main.ts
