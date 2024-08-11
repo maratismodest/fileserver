@@ -1,9 +1,7 @@
 import {
   Controller,
   Delete,
-  FileTypeValidator,
   Get,
-  MaxFileSizeValidator,
   Param,
   ParseFilePipe,
   Post,
@@ -18,7 +16,7 @@ import * as process from 'process';
 
 import { UploadDto } from './dto/upload.dto';
 import { UploadsService } from './uploads.service';
-import { getExtension } from './uploads.utils';
+import { getExtension, validators } from './uploads.utils';
 
 @ApiTags('Uploads')
 @Controller('uploads')
@@ -50,10 +48,7 @@ export class UploadsController {
   handleUpload(
     @UploadedFile(
       new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1024 * 1000 }), //bytes
-          new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
-        ],
+        validators: validators,
       }),
     )
     file: Express.Multer.File,

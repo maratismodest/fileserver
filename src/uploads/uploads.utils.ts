@@ -1,4 +1,10 @@
-export const mimeTypes = {
+import {
+  FileTypeValidator,
+  FileValidator,
+  MaxFileSizeValidator,
+} from '@nestjs/common';
+
+const mimeTypes = {
   jpeg: 'image/jpeg',
   jpg: 'image/jpg',
   png: 'image/png',
@@ -16,3 +22,12 @@ export const getExtension = (mimeType: string) => {
       return 'unknown';
   }
 };
+
+const MAX_SIZE = 1024 * 1024; // 1MB
+
+export const validators: FileValidator<Record<string, any>>[] = [
+  new MaxFileSizeValidator({ maxSize: MAX_SIZE }), //bytes
+  new FileTypeValidator({
+    fileType: new RegExp(`(${Object.keys(mimeTypes).join('|')})$`),
+  }),
+];
